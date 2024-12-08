@@ -17,6 +17,23 @@ export const getProducts = async () => {
   }
 };
 
+export const getReservations = async () => {
+  try {
+    const request = {
+      url: 'http://localhost:8080/reservations',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+    }
+   };
+   const response = await sendRequest(request);
+   return await response.json();
+  } catch (error) {
+    console.error('Error fetching reservations: ', error);
+    throw error
+  }
+}
+
 export const deleteProduct = async (id) => {
   try {
     const request = {

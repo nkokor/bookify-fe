@@ -9,7 +9,7 @@ const Products = () => {
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
     const [products, setProducts] = useState([
-    /*    { 
+       /* { 
         id: 1,
         coverImage: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1672676191i/75513900.jpg',
         title: 'Powerless', 
@@ -24,22 +24,22 @@ const Products = () => {
         author: "Lauren Roberts",
         numberOfPages: 500,
         description: "The powers these Elites have possessed for decades were graciously gifted to them by the Plague, though not all were fortunate enough to both survive the sickness and reap the reward. Those born Ordinary are just that—ordinary. And when the king decreed that all Ordinaries be banished in order to preserve his Elite society, lacking an ability suddenly became a crime—making Paedyn Gray a felon by fate and a thief by necessity. The powers these Elites have possessed for decades were graciously gifted to them by the Plague, though not all were fortunate enough to both survive the sickness and reap the reward. Those born Ordinary are just that—ordinary. And when the king decreed that all Ordinaries be banished in order to preserve his Elite society, lacking an ability suddenly became a crime—making Paedyn Gray a felon by fate and a thief by necessity. The powers these Elites have possessed for decades were graciously gifted to them by the Plague, though not all were fortunate enough to both survive the sickness and reap the reward. Those born Ordinary are just that—ordinary. And when the king decreed that all Ordinaries be banished in order to preserve his Elite society, lacking an ability suddenly became a crime—making Paedyn Gray a felon by fate and a thief by necessity."
-    } */
+    }*/ 
     ]);
 
-    const fetchProducts = async () => {
+   const fetchProducts = async () => {
         try {
           const data = await getProducts();
           setProducts(data);
         } catch (error) {
           console.error("Error fetching products:", error);
-          setProducts([]);
+         setProducts([]);
         }
       };
     
       useEffect(() => {
         fetchProducts();
-      }, []);
+      }, []); 
 
     const removeProduct = async (productId) => {
         try {

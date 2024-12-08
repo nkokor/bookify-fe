@@ -1,0 +1,96 @@
+#ai-content input, #ai-content select {
+  border: none;
+  padding: 5px;
+  color: grey;
+  outline: none; 
+  border-radius: 2px; 
+  background-color: #f1f1f186; 
+  font-size: 14px; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+#ai-content div > input:not(:last-child), 
+#ai-content div > select:not(:last-child) {
+  margin-bottom: 10px; 
+}
+
+#ai-content input:hover, select:hover {
+  background-color: #f1f1f186 
+}
+
+#ai-content input:focus, select:focus {
+  background-color: #ffffffb3; 
+  border: none 
+}
+
+#ai-content button {
+  margin-top: 10px; 
+}
+
+#ai-content select {
+  border: none;
+  padding: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  outline: none;
+  border-radius: 2px;
+  background-color: #f1f1f196;
+  font-size: 14px;
+  width: auto; 
+  box-sizing: border-box;
+}
+
+#ai-content select:hover {
+  background-color: #eaeaea;
+}
+
+#ai-content select:focus {
+  border: none;
+}
+
+#ai-content {
+  padding-top: 100px;
+}
+
+.b-container, .dropdown-group {
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
+#ai-content p {
+  opacity: 80%;
+  font-size: 14px;
+}
+
+.toggle-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px; 
+  margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+  padding: 10px 20px;
+  border-radius: 0px;
+  font-family: 'Lora';
+  border: none;
+  background-color: rgba(37, 50, 44, 0.275);
+  color: #ffffffca;
+  cursor: pointer;
+  transition: all 0.3s ease; 
+}
+
+.toggle-buttons button.active {
+  background-color: rgba(37, 50, 44, 0.784);
+  color: #ffffffca;
+}
+
+.toggle-buttons button:hover {
+  opacity: 80%; 
+}
+
