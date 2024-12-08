@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../../css/AISupport.css";
+import { getRating } from "../../api/AIApi";
 import StatusMessageModal from "../modals/StatusMessageModal"; 
 
 const AISupport = () => {
@@ -47,15 +48,21 @@ const AISupport = () => {
     alert("Recommendation request submitted! Check the console for details.");
   };
 
-  const getRating = () => {
+  const getBookRating = async () => {
     if (ratingInput.trim() === "") {
       setModalMessage("Please provide book title");
       setIsModalOpen(true);
       return;
     }
+    try {
+        const rating = await getRating(ratingInput.trim());
+        setModalMessage(rating);
+        setIsModalOpen(true);
 
-    alert("Fetching your current rating...");
-    console.log("User Rating Input:", ratingInput);
+    } catch (error) {
+        setModalMessage("Something went wrong. Try again later.");
+        setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
@@ -147,7 +154,7 @@ const AISupport = () => {
             value={ratingInput}
             onChange={(e) => setRatingInput(e.target.value)}
           />
-          <div className="b-container"><button className="button-element" onClick={getRating}>Get Rating</button></div>
+          <div className="b-container"><button className="button-element" onClick={getBookRating}>Get Rating</button></div>
         </div>
       )}
 
