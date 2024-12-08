@@ -2,30 +2,18 @@ import React, { useState } from "react";
 import "../../css/AISupport.css";
 import { getRating, getRecommendation } from "../../api/AIApi";
 import StatusMessageModal from "../modals/StatusMessageModal"; 
+import ToggleButtons from "./ToggleButtons";
+import BookRecommendationForm from "./BookRecommendationForm";
+import BookRatingForm from "./BookRatingForm";
 
 const AISupport = () => {
-  const [activeForm, setActiveForm] = useState("recommendation"); 
+  const [activeForm, setActiveForm] = useState("recommendation");
   const [genres, setGenres] = useState(["", "", ""]);
   const [authors, setAuthors] = useState(["", "", ""]);
   const [userFavourites, setUserFavourites] = useState(["", "", ""]);
   const [ratingInput, setRatingInput] = useState("");
   const [modalMessage, setModalMessage] = useState(""); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
-
-  const genreOptions = [
-    "Fantasy",
-    "History",
-    "Fiction",
-    "Non-Fiction",
-    "Self-Help",
-    "Romance",
-    "Horror",
-    "Thriller",
-    "Sci-Fi",
-    "Children's",
-    "Action",
-    "Mystery",
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getBookRecommendation = async () => {
     const filledGenres = genres.filter((g) => g.trim() !== "");
@@ -38,13 +26,7 @@ const AISupport = () => {
       return;
     }
 
-    const requestData = {
-      genres: filledGenres,
-      authors: filledAuthors,
-      userFavourites: filledBooks,
-    };
-
-    console.log("Request Data:", requestData);
+    const requestData = { genres: filledGenres, authors: filledAuthors, userFavourites: filledBooks };
 
     try {
       const recommendation = await getRecommendation(requestData);
@@ -95,92 +77,26 @@ const AISupport = () => {
 
   return (
     <div id='ai-content' style={{ maxWidth: "500px", margin: "0 auto" }}>
-      <div className="toggle-buttons">
-        <button
-          onClick={() => handleFormSwitch("recommendation")}
-          className={activeForm === "recommendation" ? "active" : ""}
-        >
-          Book Recommendation
-        </button>
-        <button
-          onClick={() => handleFormSwitch("rating")}
-          className={activeForm === "rating" ? "active" : ""}
-        >
-          Check Book Rating
-        </button>
-      </div>
+      <ToggleButtons activeForm={activeForm} handleFormSwitch={handleFormSwitch} />
 
       {activeForm === "recommendation" && (
-        <div>
-          <div style={{ marginBottom: "20px" }}>
-            <p>Select up to 3 genres:</p>
-            <div className="dropdown-group">
-              {genres.map((genre, index) => (
-                <select
-                  key={index}
-                  value={genre}
-                  onChange={(e) =>
-                    setGenres(genres.map((g, i) => (i === index ? e.target.value : g)))
-                  }
-                >
-                  <option value="">Select genre</option>
-                  {genreOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: "20px" }}>
-            <p>Provide up to three authors you enjoy:</p>
-            {authors.map((author, index) => (
-              <input
-                key={index}
-                type="text"
-                placeholder="Enter author name"
-                value={author}
-                onChange={(e) =>
-                  setAuthors(authors.map((a, i) => (i === index ? e.target.value : a)))
-                }
-              />
-            ))}
-          </div>
-
-          <div style={{ marginBottom: "20px" }}>
-            <p>Provide up to 3 of your favourite books:</p>
-            {userFavourites.map((book, index) => (
-              <input
-                key={index}
-                type="text"
-                placeholder="Enter book title"
-                value={book}
-                onChange={(e) =>
-                  setUserFavourites(userFavourites.map((b, i) => (i === index ? e.target.value : b)))
-                }
-              />
-            ))}
-          </div>
-          <div className="b-container">
-            <button className="button-element" onClick={getBookRecommendation}>Get Recommendation</button>
-          </div>   
-        </div>
+        <BookRecommendationForm 
+          genres={genres} 
+          setGenres={setGenres} 
+          authors={authors} 
+          setAuthors={setAuthors} 
+          userFavourites={userFavourites} 
+          setUserFavourites={setUserFavourites} 
+          getBookRecommendation={getBookRecommendation} 
+        />
       )}
 
       {activeForm === "rating" && (
-        <div>
-          <input
-            type="text"
-            placeholder="Enter book title:"
-            value={ratingInput}
-            onChange={(e) => setRatingInput(e.target.value)}
-          />
-          <div className="b-container">
-            <button className="button-element" onClick={getBookRating}>Get Rating</button>
-          </div>
-        </div>
+        <BookRatingForm 
+          ratingInput={ratingInput} 
+          setRatingInput={setRatingInput} 
+          getBookRating={getBookRating} 
+        />
       )}
 
       {isModalOpen && <StatusMessageModal onClose={closeModal} message={modalMessage} />}
