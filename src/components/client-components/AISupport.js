@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../css/AISupport.css";
-import { getRating } from "../../api/AIApi";
+import { getRating, getRecommendation } from "../../api/AIApi";
 import StatusMessageModal from "../modals/StatusMessageModal"; 
 
 const AISupport = () => {
@@ -27,13 +27,13 @@ const AISupport = () => {
     "Mystery",
   ];
 
-  const getRecommendation = () => {
+  const getBookRecommendation = async () => {
     const filledGenres = genres.filter((g) => g.trim() !== "");
     const filledAuthors = authors.filter((a) => a.trim() !== "");
     const filledBooks = userFavourites.filter((b) => b.trim() !== "");
 
     if (filledGenres.length === 0 || filledAuthors.length === 0 || filledBooks.length === 0) {
-      setModalMessage("Please provide at least one input for all categories");
+      setModalMessage("Please provide at least one input for all categories.");
       setIsModalOpen(true);
       return;
     }
@@ -45,23 +45,35 @@ const AISupport = () => {
     };
 
     console.log("Request Data:", requestData);
-    alert("Recommendation request submitted! Check the console for details.");
+
+    try {
+      const recommendation = await getRecommendation(requestData);
+      setModalMessage(recommendation);
+      setIsModalOpen(true);
+      setGenres(["", "", ""]);
+      setAuthors(["", "", ""]);
+      setUserFavourites(["", "", ""]);
+    } catch (error) {
+      setModalMessage("Something went wrong. Try again later.");
+      setIsModalOpen(true);
+    }
   };
 
   const getBookRating = async () => {
     if (ratingInput.trim() === "") {
-      setModalMessage("Please provide book title");
+      setModalMessage("Please provide book title.");
       setIsModalOpen(true);
       return;
     }
-    try {
-        const rating = await getRating(ratingInput.trim());
-        setModalMessage(rating);
-        setIsModalOpen(true);
 
+    try {
+      const rating = await getRating(ratingInput.trim());
+      setModalMessage(rating);
+      setIsModalOpen(true);
+      setRatingInput("");
     } catch (error) {
-        setModalMessage("Something went wrong. Try again later.");
-        setIsModalOpen(true);
+      setModalMessage("Something went wrong. Try again later.");
+      setIsModalOpen(true);
     }
   };
 
@@ -70,46 +82,55 @@ const AISupport = () => {
     setModalMessage("");
   };
 
+  const handleFormSwitch = (formType) => {
+    if (formType === "recommendation") {
+      setGenres(["", "", ""]);
+      setAuthors(["", "", ""]);
+      setUserFavourites(["", "", ""]);
+    } else if (formType === "rating") {
+      setRatingInput("");
+    }
+    setActiveForm(formType); 
+  };
+
   return (
     <div id='ai-content' style={{ maxWidth: "500px", margin: "0 auto" }}>
-    <div className="toggle-buttons">
-    <button
-        onClick={() => setActiveForm("recommendation")}
-        className={activeForm === "recommendation" ? "active" : ""}
-    >
-        Book Recommendation
-    </button>
-    <button
-        onClick={() => setActiveForm("rating")}
-        className={activeForm === "rating" ? "active" : ""}
-    >
-        What is my current rating?
-    </button>
-    </div>
-
+      <div className="toggle-buttons">
+        <button
+          onClick={() => handleFormSwitch("recommendation")}
+          className={activeForm === "recommendation" ? "active" : ""}
+        >
+          Book Recommendation
+        </button>
+        <button
+          onClick={() => handleFormSwitch("rating")}
+          className={activeForm === "rating" ? "active" : ""}
+        >
+          Check Book Rating
+        </button>
+      </div>
 
       {activeForm === "recommendation" && (
         <div>
-
           <div style={{ marginBottom: "20px" }}>
             <p>Select up to 3 genres:</p>
             <div className="dropdown-group">
-            {genres.map((genre, index) => (
-              <select
-                key={index}
-                value={genre}
-                onChange={(e) =>
-                  setGenres(genres.map((g, i) => (i === index ? e.target.value : g)))
-                }
-              >
-                <option value="">Select genre</option>
-                {genreOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            ))}
+              {genres.map((genre, index) => (
+                <select
+                  key={index}
+                  value={genre}
+                  onChange={(e) =>
+                    setGenres(genres.map((g, i) => (i === index ? e.target.value : g)))
+                  }
+                >
+                  <option value="">Select genre</option>
+                  {genreOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ))}
             </div>
           </div>
 
@@ -142,7 +163,9 @@ const AISupport = () => {
               />
             ))}
           </div>
-            <div className="b-container"><button className="button-element"  onClick={getRecommendation}>Get Recommendation</button></div>   
+          <div className="b-container">
+            <button className="button-element" onClick={getBookRecommendation}>Get Recommendation</button>
+          </div>   
         </div>
       )}
 
@@ -154,7 +177,9 @@ const AISupport = () => {
             value={ratingInput}
             onChange={(e) => setRatingInput(e.target.value)}
           />
-          <div className="b-container"><button className="button-element" onClick={getBookRating}>Get Rating</button></div>
+          <div className="b-container">
+            <button className="button-element" onClick={getBookRating}>Get Rating</button>
+          </div>
         </div>
       )}
 
